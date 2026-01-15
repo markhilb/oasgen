@@ -113,6 +113,21 @@ where
     }
 }
 
+impl<T, const N: usize> OaSchema for [T; N]
+where
+    T: OaSchema,
+{
+    fn schema() -> Schema {
+        let inner = T::schema();
+        Schema::new_array(inner)
+    }
+
+    fn schema_ref() -> ReferenceOr<Schema> {
+        let inner = T::schema_ref();
+        ReferenceOr::Item(Schema::new_array(inner))
+    }
+}
+
 impl<T> OaSchema for Option<T>
 where
     T: OaSchema,
