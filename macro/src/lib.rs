@@ -62,10 +62,10 @@ pub fn oasgen(attr: TokenStream, input: TokenStream) -> TokenStream {
             .filter_map(|arg| match arg {
                 FnArg::Receiver(_) => panic!("Receiver arguments are not supported"),
                 FnArg::Typed(pat) => {
-                    if let Pat::Ident(name) = pat.pat.as_ref() {
-                        if skip.contains(&name.ident) {
-                            return None;
-                        }
+                    if let Pat::Ident(name) = pat.pat.as_ref()
+                        && skip.contains(&name.ident)
+                    {
+                        return None;
                     }
 
                     Some(turbofish(pat.ty.as_ref().clone()))

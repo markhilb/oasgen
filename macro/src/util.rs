@@ -64,9 +64,11 @@ pub fn impl_OaSchema_schema(fields: &[Field], docstring: Option<String>) -> Toke
                 }
             } else {
                 let required = !(attr.skip || attr.skip_serializing_if.is_some() || is_option(ty));
-                let required = required.then(|| {
+                let required = if required {
                     quote! { o.required_mut().push(#name.to_string()); }
-                }).unwrap_or_default();
+                } else {
+                    Default::default()
+                };
                 let schema_ref = if attr.inline {
                     quote! {
                         <#ty as ::oasgen::OaSchema>::schema()
